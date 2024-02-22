@@ -1,0 +1,11 @@
+/users/andyhero/octopus/build/CMakeFiles/dmfs.dir
+/users/andyhero/octopus/build/CMakeFiles/nrfsc.dir
+/users/andyhero/octopus/build/CMakeFiles/jninrfs.dir
+/users/andyhero/octopus/build/CMakeFiles/fusenrfs.dir
+/users/andyhero/octopus/build/CMakeFiles/locktest.dir
+/users/andyhero/octopus/build/CMakeFiles/mpibw.dir
+/users/andyhero/octopus/build/CMakeFiles/mpitest.dir
+/users/andyhero/octopus/build/CMakeFiles/nrfsCli.dir
+/users/andyhero/octopus/build/CMakeFiles/nrfstest.dir
+/users/andyhero/octopus/build/CMakeFiles/edit_cache.dir
+/users/andyhero/octopus/build/CMakeFiles/rebuild_cache.dir
