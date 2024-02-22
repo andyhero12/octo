@@ -12,6 +12,9 @@
 
 using namespace std;
 
+static inline uint32_t my_gettid() {
+    return (uint32_t)syscall(SYS_gettid);
+}
 
 #define CLIENT_MESSAGE_SIZE 4096
 #define MAX_CLIENT_NUMBER   1024

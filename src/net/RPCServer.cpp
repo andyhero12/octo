@@ -13,6 +13,7 @@ RPCServer::RPCServer(int _cqSize) :cqSize(_cqSize) {
 	client = new RPCClient(conf, socket, mem, (uint64_t)mm);
 	tx = new TxManager(mem->getLocalLogAddress(), mem->getDistributedLogAddress());
 	socket->RdmaListen();
+	printf("BEFORE FS\n");
 	fs = new FileSystem((char *)mem->getMetadataBaseAddress(),
               (char *)mem->getDataAddress(),
               1024 * 20,/* Constructor of file system. */
@@ -21,6 +22,7 @@ RPCServer::RPCServer(int _cqSize) :cqSize(_cqSize) {
               conf->getServerCount(),    
               socket->getNodeID());
 	fs->rootInitialize(socket->getNodeID());
+	printf("AFTER FS INIT\n");
 	wk = new thread[cqSize]();
 	for (int i = 0; i < cqSize; i++)
 		wk[i] = thread(&RPCServer::Worker, this, i);
@@ -55,7 +57,7 @@ TxManager* RPCServer::getTxManagerInstance() {
 }
 
 void RPCServer::Worker(int id) {
-	uint32_t tid = gettid();
+	uint32_t tid = my_gettid();
 	// gettimeofday(&startt, NULL);
 	Debug::notifyInfo("Worker %d, tid = %d", id, tid);
 	th2id[tid] = id;
@@ -215,7 +217,7 @@ void RPCServer::ProcessRequest(GeneralSendBuffer *send, uint16_t NodeID, uint16_
 }
 
 int RPCServer::getIDbyTID() {
-	uint32_t tid = gettid();
+	uint32_t tid = my_gettid();
 	return th2id[tid];
 }
 uint64_t RPCServer::ContractReceiveBuffer(GeneralSendBuffer *send, GeneralReceiveBuffer *recv) {

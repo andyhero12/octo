@@ -65,7 +65,7 @@ uint64_t MemoryManager::getDataAddress() {
 uint64_t MemoryManager::getServerSendAddress(uint16_t NodeID, uint64_t *buffer) {
     // uint8_t temp = __sync_fetch_and_add( &SendPoolPointer[NodeID - 1], 1 );
     // temp = temp % SERVER_MASSAGE_NUM;
-    uint32_t tid = gettid();
+    uint32_t tid = my_gettid();
     uint64_t offset = (uint64_t)th2id[tid];
     *buffer = (ServerSendBaseAddress + 
         (NodeID - 1) * SERVER_MASSAGE_SIZE * SERVER_MASSAGE_NUM
@@ -94,6 +94,6 @@ uint64_t MemoryManager::getDistributedLogAddress() {
 }
 
 void MemoryManager::setID(int ID) {
-    uint32_t tid = gettid();
+    uint32_t tid = my_gettid();
     th2id[tid] = ID;
 }

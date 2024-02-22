@@ -2358,9 +2358,17 @@ FileSystem::FileSystem(char *buffer, char *bufferBlock, uint64_t countFile,
                        uint64_t countNode, NodeHash hashLocalNode)
 {
     if ((buffer == NULL) || (bufferBlock == NULL) || (countFile == 0) || (countDirectory == 0) ||
-        (countBlock == 0) || (countNode == 0) || (hashLocalNode < 1) || 
+        (countBlock == 0) || (countNode == 0)  || 
         (hashLocalNode > countNode)) {
-        fprintf(stderr, "FileSystem::FileSystem: parameter error.\n");
+	    printf("Buffer Null: %d, Block Null: %d\n", buffer == NULL, bufferBlock == NULL);
+	    printf("countBlock %d\n", countBlock == 0);
+	    printf("countNode %d\n", countNode == 0);
+	    printf("hashLocal %d\n", hashLocalNode < 1);
+	    printf("hashLocalNode Val %d\n", hashLocalNode);
+	    printf("hashLocalNode %d\n", hashLocalNode > countNode);
+
+	    printf("Buffer: %s, Block: %s, count: %lu, direct: %ld\n", buffer, bufferBlock, countFile, countDirectory);
+    	    fprintf(stderr, "FileSystem::FileSystem: parameter error.\n");
         exit(EXIT_FAILURE);             /* Exit due to parameter error. */
     } else {
         this->addressHashTable = (uint64_t)buffer;

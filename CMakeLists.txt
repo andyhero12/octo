@@ -9,7 +9,7 @@ include_directories(${MPI_INCLUDE_DIR})
 set (CMAKE_C_FLAGS "-Wall -Wno-deprecated-declarations -Wsign-compare")
 set (CMAKE_CXX_FLAGS "-g ${CMAKE_C_FLAGS} -std=c++11 -Wall -O0 -DTHREAD -D_FILE_OFFSET_BITS=64 -libverbs -lfuse")
 
-option (SANITIZE "Turn on sanitization" OFF)
+option (SANITIZE "Turn on sanitization" ON)
 if (SANITIZE)
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
 endif()

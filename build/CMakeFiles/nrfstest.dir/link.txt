@@ -1,1 +1,0 @@
-mpicxx -g -Wall -Wno-deprecated-declarations -Wsign-compare -std=c++11 -Wall -O0 -DTHREAD -D_FILE_OFFSET_BITS=64 -libverbs -lfuse -L/usr/local/lib/libfuse.so -rdynamic CMakeFiles/nrfstest.dir/src/test/nrfstest.cpp.o -o nrfstest  -Wl,-rpath,/users/andyhero/octopus/build -lcrypto -lcryptopp -ldl libnrfsc.so -libverbs -lfuse -lcrypto -lcryptopp -ldl 
