@@ -1,5 +1,8 @@
 #!/bin/bash
 sudo apt update
+sudo apt install default-jdk
+sudo apt install libboost-all-dev
+sudo apt install libfuse-dev
 sudo apt install build-essential
 sudo apt install autoconf libtool
 sudo apt-get install libibverbs-dev
