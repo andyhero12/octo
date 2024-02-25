@@ -14,14 +14,41 @@ MemoryManager::MemoryManager(uint64_t _mm, uint64_t _ServerCount,  int _DataSize
         DMFSTotalSize += CLIENT_MESSAGE_SIZE * MAX_CLIENT_NUMBER;
         /* Add Server Message Pool. */
         DMFSTotalSize += SERVER_MASSAGE_SIZE * SERVER_MASSAGE_NUM * ServerCount;
-        shmid = shmget(SHARE_MEMORY_KEY, DMFSTotalSize + LOCALLOGSIZE + DISTRIBUTEDLOGSIZE, IPC_CREAT);
+        shmid = shmget(SHARE_MEMORY_KEY, DMFSTotalSize + LOCALLOGSIZE + DISTRIBUTEDLOGSIZE, 0666| IPC_CREAT);
         if (shmid == -1) {
             Debug::notifyError("shmget error");
         }
-        shmptr = shmat(shmid, 0, 0);
+	printf("shmid: %d\n", shmid);
+       struct shmid_ds buf;
+       if (shmctl(shmid, IPC_STAT,&buf) == -1){
+       	perror("shmctl stats: IPC_STAT\n");
+       }
+       	shmptr = shmat(shmid, 0, 0);
         if (shmptr == (void *)(-1)) {
             Debug::notifyError("shmat error");
+	    switch (errno) {
+            case EACCES:
+                perror("shmat");
+                printf("Operation permission is denied to the calling process.\n");
+                break;
+            case EINVAL:
+                perror("shmat");
+                printf("Invalid shared memory identifier or illegal address for attaching shared memory segments.\n");
+                break;
+            case EMFILE:
+                perror("shmat");
+                printf("The number of shared memory segments attached to the calling process would exceed the system-imposed limit.\n");
+                break;
+            case ENOMEM:
+                perror("shmat");
+                printf("The available data space is not large enough to accommodate the shared memory segment.\n");
+                break;
+            default:
+                perror("shmat");
+                printf("Unknown error occurred.\n");
         }
+        }
+	printf("shmptr: %d\n", shmptr);
         MemoryBaseAddress = (uint64_t)shmptr;
         memset((void *)MemoryBaseAddress, '\0', DMFSTotalSize + LOCALLOGSIZE + DISTRIBUTEDLOGSIZE);
     }

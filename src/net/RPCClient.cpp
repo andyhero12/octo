@@ -11,9 +11,13 @@ RPCClient::RPCClient() {
 	isServer = false;
 	taskID = 1;
 	mm = (uint64_t)malloc(sizeof(char) * (1024 * 4 + 1024 * 1024 * 4));
+
 	conf = new Configuration();
+	printf("before socket\n");
 	socket = new RdmaSocket(1, mm, (1024 * 4 + 1024 * 1024 * 4), conf, false, 0);
+	printf("after socket before connect\n");
 	socket->RdmaConnect();
+	printf("after connect\n");
 }
 
 RPCClient::~RPCClient() {

@@ -28,6 +28,7 @@ uint16_t get_node_id_by_path(char* path)
 bool sendMessage(uint16_t node_id, void* sendBuffer, long unsigned int sendLength,
 								   void* recvBuffer, long unsigned int recvLength)
 {
+	printf("SENDING MESSAGE\n");
 	Debug::debugItem("sendMessage: dst node id: %d", node_id);
 	/* one request per time */
 	return client->RdmaCall(node_id, (char*)sendBuffer, (uint64_t)sendLength,
@@ -138,7 +139,9 @@ bool getNameFromPath(const char *path, char *name) { /* Assume path is valid. */
 nrfs nrfsConnect(const char* host, int port, int size)
 {
 	Debug::debugTitle("nrfsConnect");
+	printf("nrfsConnectBefore\n");
     client = new RPCClient();
+    printf("after nrfsConnect\n");
     DmfsDataOffset =  CLIENT_MESSAGE_SIZE * MAX_CLIENT_NUMBER;
 	DmfsDataOffset += SERVER_MASSAGE_SIZE * SERVER_MASSAGE_NUM * client->getConfInstance()->getServerCount();
     DmfsDataOffset += METADATA_SIZE;

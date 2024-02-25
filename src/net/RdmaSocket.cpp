@@ -168,15 +168,17 @@ bool RdmaSocket::CreateResources() {
 
     /* register the memory buffer */
     Debug::notifyInfo("Register Memory Region");
-    
+   printf("before mr\n");
+  printf("mm addr %d\n",&mm); 
     mr = ibv_reg_mr(pd, (void*)mm, mmSize, mrFlags);
-    if (mr == NULL) {
+   printf("after mr\n"); 
+   if (mr == NULL) {
         Debug::notifyError("Memory registration failed");
         rc = 1;
         goto CreateResourcesExit;
     }
-
-    CreateResourcesExit:
+printf("rc now %d\n");    
+CreateResourcesExit:
     if (rc) {
         /* Error encountered, cleanup */
         Debug::notifyError("Error Encountered, Cleanup ...");
@@ -295,25 +297,31 @@ bool RdmaSocket::ModifyQPtoRTR(struct ibv_qp *qp, uint32_t remote_qpn, uint16_t 
     attr.ah_attr.sl = 0;
     attr.ah_attr.src_path_bits = 0;
     attr.ah_attr.port_num = Port;
-    // if (GidIndex >= 0) {
-    //     attr.ah_attr.is_global = 1;
-    //     attr.ah_attr.port_num = 1;
-    //     memcpy(&attr.ah_attr.grh.dgid, dgid, 16);
-    //     attr.ah_attr.grh.flow_label = 0;
-    //     attr.ah_attr.grh.hop_limit = 1;
-    //     attr.ah_attr.grh.sgid_index = GidIndex;
-    //     attr.ah_attr.grh.traffic_class = 0;
-    // }
+    printf("before GID\n");
+     if (GidIndex >= 0) {
+       attr.ah_attr.is_global = 1;
+        attr.ah_attr.port_num = 1;
+         memcpy(&attr.ah_attr.grh.dgid, dgid, 16);
+         attr.ah_attr.grh.flow_label = 0;
+         attr.ah_attr.grh.hop_limit = 1;
+        attr.ah_attr.grh.sgid_index = GidIndex;
+	       attr.ah_attr.grh.traffic_class = 0;
+     }
+     printf("after GID\n");
     flags = IBV_QP_STATE | IBV_QP_AV | IBV_QP_PATH_MTU | IBV_QP_DEST_QPN | IBV_QP_RQ_PSN;
     // IBV_QP_MAX_DEST_RD_ATOMIC | IBV_QP_MIN_RNR_TIMER
     if (Mode == 0) {
         attr.max_dest_rd_atomic = 16;
         attr.min_rnr_timer = 12;
         flags |= IBV_QP_MAX_DEST_RD_ATOMIC | IBV_QP_MIN_RNR_TIMER;
+    
     }
+    printf("rc before %d\n",rc);
     rc = ibv_modify_qp(qp, &attr, flags);
+    printf("rc %d\n",rc);
     if (rc) {
-   		Debug::notifyError("failed to modify QP state to RTR");
+   	printf("failed here\n");	
+	    Debug::notifyError("failed to modify QP state to RTR");
    		return false;
     }
     return true;
@@ -435,8 +443,10 @@ bool RdmaSocket::ConnectQueuePair(PeerSockData *peer) {
             goto ConnectQPExit;
         }
         /* modify the QP to RTR */
-        ret = ModifyQPtoRTR(peer->qp[i], peer->qpNum[i], peer->lid, peer->gid);
-        if (ret == false) {
+        printf("before ret\n");
+	ret = ModifyQPtoRTR(peer->qp[i], peer->qpNum[i], peer->lid, peer->gid);
+        printf("after ret\n");
+	if (ret == false) {
             Debug::notifyError("failed to modify QP state to RTR");
             rc = 1;
             goto ConnectQPExit;
